@@ -9,26 +9,39 @@ import { Gamecontinue } from './common/Gamecontinue'
 import { Container, Row, Col } from 'react-grid-system';
 import styles from './../RockpaperscissorsWebPart.module.scss';
 
-
 const WINNER_NAMES = ['Player 1', 'Player 2', 'No-one']
 
 
-
-class GamePage extends React.Component<any,{}>{
+class GameApp extends React.Component<any,any>{
   
   
   constructor(props) {
-      
-    super(props)
+   super(props)
+   this.state={
+
+   
+      winner: NONE,
+      winnerName: 'No-one',
+      round: 1,
+      makingSelection: true,
+      choices: [0, 0],
+      cpuChoosing: true,
+      gameComplete: false,
+      gameWinner: 'No-one'
+    
+    
+    
+   };
+   
     this.onClick = this.onClick.bind(this)
     this.continueGame = this.continueGame.bind(this)  
    
-    
-   if(this.props.value === CPU_VS_CPU){
+   
+   if(this.props.gameState.gameType === CPU_VS_CPU){
     
       this.simulateCpuChoices()
     }
-    this.props.gameState.gameType =this.props.value 
+    
   }
 
   static propTypes =  {
@@ -40,7 +53,7 @@ class GamePage extends React.Component<any,{}>{
     router: PropTypes.object
   }
 
-  //when the component is rendered for the first time
+  //when the component is rendered 
   componentDidMount() {
     
     this.props.getGameType()
@@ -49,16 +62,19 @@ class GamePage extends React.Component<any,{}>{
 
   //reset all the values as it is used for both functionality
   componentWillUnmount() {   
+   
+      this.setState({
+          winner: NONE,
+          winnerName: 'No-one',
+          makingSelection: false,
+          round:1,
+          choices: [0, 0],
+          cpuChoosing:true,
+          gameComplete : false,
+          gameWinner : 'No-one'
+        })
 
-    this.props.gameState.initState.winner= NONE
-    this.props.gameState.initState.winnerName= 'No-one'
-    this.props.gameState.initState.round= 1
-    this.props.gameState.initState.makingSelection= true
-    this.props.gameState.initState.choices= [0, 0]
-    this.props.gameState.initState.cpuChoosing= true
-    this.props.gameState.initState.gameComplete= false
-    this.props.gameState.initState.gameWinner= 'No-one'
-    this.props.resetScores()
+        this.props.resetScores()
   }
 
   //computer Play 
@@ -67,11 +83,13 @@ class GamePage extends React.Component<any,{}>{
       this.selectComputerChoice(PLAYER_ONE)
       this.selectComputerChoice(PLAYER_TWO)
       let roundWinner = this.getroundWinner()
-      let roundWinnerName = WINNER_NAMES[roundWinner]           
-      
-     this.props.gameState.initState.makingSelection=false;
-     this.props.gameState.initState.winner=roundWinner;
-     this.props.gameState.initState.winnerName=roundWinnerName;
+      let roundWinnerName = WINNER_NAMES[roundWinner]        
+          
+    this.setState({
+          winner: roundWinner,
+          winnerName: roundWinnerName,
+          makingSelection: false
+        })
      
         this.props.updateScores(roundWinner)
       
@@ -80,19 +98,20 @@ class GamePage extends React.Component<any,{}>{
 
   selectComputerChoice(player) {
     let random = Math.floor(Math.random()*3)
-    let newChoices = this.props.gameState.initState.choices
-    newChoices[player] = random  
+    let newChoices = this.state.choices
+    newChoices[player] = random     
+          
+    this.setState({
+      choices: newChoices
      
-     this.props.gameState.initState.choices=newChoices;
-    
-    this.props.gameState.initState.choices=newChoices;
+    })
   }
 
   //get the result out come based on player selected choice
   getroundWinner() {
     let winner = 0
-    let playerOneChoice = this.props.gameState.initState.choices[PLAYER_ONE]
-    let playerTwoChoice = this.props.gameState.initState.choices[PLAYER_TWO]
+    let playerOneChoice = this.state.choices[PLAYER_ONE]
+    let playerTwoChoice = this.state.choices[PLAYER_TWO]
     
     switch(playerOneChoice) {
       case ROCK:
@@ -126,16 +145,20 @@ class GamePage extends React.Component<any,{}>{
 
   onClick(selection) {
     
-    let newChoices = this.props.gameState.initState.choices//this.props.choices
+    let newChoices = this.state.choices//this.props.choices
     newChoices[PLAYER_ONE] = selection
     this.selectComputerChoice(PLAYER_TWO)
     let roundWinner = this.getroundWinner()
     let roundWinnerName = WINNER_NAMES[roundWinner]   
+             
+
+      this.setState({
         
-     this.props.gameState.initState.makingSelection=false;
-     this.props.gameState.initState.winner=roundWinner;
-     this.props.gameState.initState.winnerName=roundWinnerName;
-     this.props.gameState.initState.choices=newChoices;
+        winner: roundWinner,
+        winnerName: roundWinnerName,
+        makingSelection: false,
+        choices: newChoices
+      })
 
       this.props.updateScores(roundWinner)
       this.forceUpdate()
@@ -164,28 +187,30 @@ class GamePage extends React.Component<any,{}>{
   endGame(winner) {
 
    // the reset the below values as the same component is used for manvscpu,cpuvscpu both functionality   
-    this.props.gameState.initState.makingSelection=false;
-    this.props.gameState.initState.gameWinner=winner;
-    this.props.gameState.initState.gameComplete=true;
+  
+    this.setState({
+      makingSelection: false,
+      gameComplete: true,
+      gameWinner: winner
+    })
   }
 
 
   //This method handles the
   continueGame() {
-    let newRound = this.props.gameState.initState.round
+    let newRound = this.state.round
     let maxRound=this.props.maxGameRound
     
     newRound = newRound + 1
   
-   if(true)
-   {
+   
       //check the maxround if met the condition disable the game continue option
      
      if (newRound <= maxRound) {      
-      this.props.gameState.initState.makingSelection=true;
-      this.props.gameState.initState.round=newRound;
+      
+      this.setState({ round: newRound, makingSelection: true })
        //only for computer vs computer to set dynamic selection
-       if (this.props.gameType === CPU_VS_CPU) {
+       if (this.props.gameState.gameType=== CPU_VS_CPU) {
           this.simulateCpuChoices()
         }
         let checkWinner = this.checkMatchWinner()
@@ -193,16 +218,16 @@ class GamePage extends React.Component<any,{}>{
           this.endGame(checkWinner)
         }
         //update to get latest data
-        this.forceUpdate()
+       this.forceUpdate()
       } else {
         let checkWinner = this.checkMatchWinner()
         //this.endGame(checkWinner)
         if (newRound > maxRound){
           this.endGame(checkWinner)
         }
-        this.forceUpdate()
+       this.forceUpdate()
       }
-    }
+    
   }
 
   
@@ -210,8 +235,8 @@ class GamePage extends React.Component<any,{}>{
   render() {
         
     const {  scores } = this.props
-    let  gameType  =this.props.gameState.gameType
- 
+    let  gameType  =this.props.gameState.gameType    
+     
     return (
       <div  className= {styles.rockpaperscissors}>
       {gameType !== undefined &&
@@ -232,7 +257,7 @@ class GamePage extends React.Component<any,{}>{
           </Row>
           <Row >
             <Col >
-              <h4 style={{color:'red'}}>Round {this.props.gameState.initState.round}</h4>
+              <h4 style={{color:'red'}}>Round {this.state.round}</h4>
             </Col>
           </Row>
           {scores !== undefined &&
@@ -254,7 +279,7 @@ class GamePage extends React.Component<any,{}>{
               </Col>
             </Row>
           }
-          {this.props.gameState.initState.makingSelection ?
+          {this.state.makingSelection ?
            
           <div>
            {gameType === PLAYER_VS_CPU ?
@@ -290,7 +315,7 @@ class GamePage extends React.Component<any,{}>{
              </div>
              :
              <div>
-               {this.props.gameState.initState.cpuChoosing &&
+               {this.state.cpuChoosing &&
                  <h5 style={{color:'red',textAlign:'center'}}>Computer thinking..</h5>
                }
              </div>
@@ -298,15 +323,15 @@ class GamePage extends React.Component<any,{}>{
          </div>
          :
          <div>
-           {!this.props.gameState.initState.gameComplete ?
+           {!this.state.gameComplete ?
             <div>
             
              <Gamecontinue
-                    gameType={gameType}
+                    gameType={this.props.gameState.gameType}
                     continueGame={this.continueGame}
-                    playerOneChoice={this.props.gameState.initState.choices[PLAYER_ONE]}
-                    playerTwoChoice={this.props.gameState.initState.choices[PLAYER_TWO]}
-                    roundWinner={this.props.gameState.initState.winnerName}
+                    playerOneChoice={this.state.choices[PLAYER_ONE]}
+                    playerTwoChoice={this.state.choices[PLAYER_TWO]}
+                    roundWinner={this.state.winnerName}
                   />
              </div>
              :
@@ -314,7 +339,7 @@ class GamePage extends React.Component<any,{}>{
                <Row >
                  <Col >
                 
-                   <h4 >A game is won when a player scores {this.props.scoretoWin} points.So the winner is {this.props.gameState.initState.gameWinner}  </h4>
+                   <h4 >A game is won when a player scores {this.props.scoretoWin} points.So the winner is {this.state.gameWinner}  </h4>
                    </Col>
                </Row>
              </div>
@@ -364,4 +389,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(GamePage)
+export default connect(mapStateToProps, mapDispatchToProps)(GameApp)
