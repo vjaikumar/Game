@@ -1,0 +1,18 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/config.2.0.schema.json",
+  "version": "2.0",
+  "bundles": {
+    "rockpaperscissors-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/rockpaperscissors/RockpaperscissorsWebPart.js",
+          "manifest": "./src/webparts/rockpaperscissors/RockpaperscissorsWebPart.manifest.json"
+        }
+      ]
+    }
+  },
+  "externals": {},
+  "localizedResources": {
+    "RockpaperscissorsWebPartStrings": "lib/webparts/rockpaperscissors/loc/{locale}.js"
+  }
+}
