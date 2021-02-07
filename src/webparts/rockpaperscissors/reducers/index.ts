@@ -24,8 +24,8 @@ const initState ={
 const gameState = (state = {
 
   gameType: PLAYER_VS_CPU,
-  scores: [0, 0],
-  initState
+  scores: [0, 0]
+  
 }, action) => {
   
   

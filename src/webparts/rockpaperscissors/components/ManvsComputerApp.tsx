@@ -2,25 +2,30 @@ import * as React from 'react';
 import styles from '../RockpaperscissorsWebPart.module.scss';
 import { createStore } from 'redux'
 import rootReducer from '../reducers/index'
-import { Provider } from 'react-redux';
-import GamePage from '.'
+import GameApp from '.'
 import { PLAYER_VS_CPU } from '../constants'
+import { selectGameType } from './actions';
+import { connect } from 'react-redux'
+
 const store = createStore(rootReducer)
 
 
-export default class ManvsComputerApp extends React.Component<any> { 
+ class ManvsComputerApp extends React.Component<any> { 
   
-  public render(): React.ReactElement<any> {
  
+  public render(): React.ReactElement<any> {
+    
+    this.props.selectGameType(PLAYER_VS_CPU);
+
     return (
       <div >
       <div className={ styles.container }>
         <div className={ styles.row }>
           <div className={ styles.column }>
-          <Provider  store={store}>
-            <GamePage {...this.props} value={PLAYER_VS_CPU}/>
+          
+            <GameApp {...this.props} />
      
-          </Provider>
+         
           </div>
         </div>
       </div>
@@ -29,3 +34,12 @@ export default class ManvsComputerApp extends React.Component<any> {
   }
 }
 
+const mapDispatchToProps = (dispatch) => {
+  return {
+   
+    selectGameType: (gameType) => {
+      dispatch(selectGameType(gameType))
+    }
+  }
+}
+export default connect(null,mapDispatchToProps)(ManvsComputerApp);

@@ -7,8 +7,10 @@ import StatisticsApp from '../components/StatisticsApp';
 import GamePage from '../components/index'
 import { BrowserRouter as Router, Route, Link, Redirect, Switch, HashRouter, PropsRoute } from 'react-router-dom';
 import Navigation from '../SideNav/Navigation';
-
-
+import { createStore } from 'redux'
+import rootReducer from '../reducers/index'
+import { Provider } from 'react-redux';
+const store = createStore(rootReducer)
 
 export default class SinglePageApp extends React.Component<ISinglePageAppProps, {}> {
 
@@ -16,6 +18,7 @@ export default class SinglePageApp extends React.Component<ISinglePageAppProps, 
   public render(): React.ReactElement<ISinglePageAppProps> {
    
     return (
+      <Provider  store={store}>
       <HashRouter >
         <Stack horizontal gap={15}>
           <Navigation />
@@ -35,6 +38,8 @@ export default class SinglePageApp extends React.Component<ISinglePageAppProps, 
           </StackItem>
         </Stack>
       </HashRouter>
+
+      </Provider>
     );
   }
 }

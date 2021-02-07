@@ -9,7 +9,10 @@ export class Gamecontinue extends React.Component<any,{}>{
    
     super(props)
     this.onClick = this.onClick.bind(this)
+   
     if (this.props.gameType === CPU_VS_CPU) {
+     
+      
       this.continueAfterDelay()
     }
   }
