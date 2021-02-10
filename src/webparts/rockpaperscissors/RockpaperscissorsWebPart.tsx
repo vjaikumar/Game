@@ -56,12 +56,12 @@ export default class RockpaperscissorsWebPart extends BaseClientSideWebPart<IRoc
                 }),
                 
                 PropertyPaneTextField('maxGameRound', {
-                  label: 'Max Game Round',
-                  value:'5'
+                  label: 'Max Game Round'
+                  //value:'5'
                 }),
                 PropertyPaneTextField('scoretoWin', {
-                  label: 'Player Winning Score',
-                  value:'3'
+                  label: 'Player Winning Score'
+                  //value:'3'
                 }),
                 
               ]

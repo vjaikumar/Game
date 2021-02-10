@@ -199,7 +199,7 @@ class GameApp extends React.Component<any,any>{
   //This method handles the
   continueGame() {
     let newRound = this.state.round
-    let maxRound=this.props.maxGameRound
+    let maxRound= Number(this.props.maxGameRound)
     
     newRound = newRound + 1
   

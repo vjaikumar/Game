@@ -21,7 +21,11 @@
     "description": { "default": "rockpaperscissors description" },
     "officeFabricIconFontName": "Page",
     "properties": {
-      "description": "rockpaperscissors"
+      "description": "rockpaperscissors",
+      "maxGameRound":"5",
+       "scoretoWin":"3"
+
+
     }
   }]
 }

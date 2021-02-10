@@ -12,7 +12,8 @@ const store = createStore(rootReducer)
 
  class ComputervsComputerApp extends React.Component<any> {
    //class AppPage extends React.Component<any> {
-  
+ 
+
    
   public render(): React.ReactElement<any> {
    
